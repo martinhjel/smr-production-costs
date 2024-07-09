@@ -1,0 +1,254 @@
+- name: BWRX-300
+  reactor_type: BWR
+  investment: { type: "Degenerate", value: 2250000 }
+  plant_capacity: { type: "Degenerate", value: 300 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 60 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 144365 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 29.55448 }
+  reference_pj:
+    investment: { type: "Degenerate", value: 9722604 }
+    capacity: { type: "Degenerate", value: 935 }
+
+- name: UK SMR
+  reactor_type: PWR
+  investment: { type: "Degenerate", value: 3900677 }
+  plant_capacity: { type: "Degenerate", value: 443 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 60 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 518242 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 6.23829 }
+  reference_pj:
+    investment: { type: "Degenerate", value: 8600000 }
+    capacity: { type: "Degenerate", value: 1117 }
+
+- name: SMR-160
+  reactor_type: PWR
+  investment: { type: "Degenerate", value: 6312500 }
+  plant_capacity: { type: "Degenerate", value: 160 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 80 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 146645 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 6.23829 }
+  reference_pj:
+    investment: { type: "Degenerate", value: 8600000 }
+    capacity: { type: "Degenerate", value: 1117 }
+
+- name: SMART
+  reactor_type: PWR
+  investment: { type: "Degenerate", value: 8000000 }
+  plant_capacity: { type: "Degenerate", value: 107 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 60 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 65025 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 5.3192 }
+  reference_pj:
+    investment: { type: "Degenerate", value: 8600000 }
+    capacity: { type: "Degenerate", value: 1117 }
+
+- name: NuScale
+  reactor_type: PWR
+  investment: { type: "Degenerate", value: 3600000 }
+  plant_capacity: { type: "Degenerate", value: 77 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 60 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 179595 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 7.15738 }
+  reference_pj:
+    investment: { type: "Degenerate", value: 8600000 }
+    capacity: { type: "Degenerate", value: 1117 }
+
+- name: RITM 200M
+  reactor_type: PWR
+  investment: { type: "Degenerate", value: 4212000 }
+  plant_capacity: { type: "Degenerate", value: 53 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 60 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 170980 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 6.23829 }
+  reference_pj:
+    investment: { type: "Degenerate", value: 8600000 }
+    capacity: { type: "Degenerate", value: 1117 }
+
+- name: ACPR 50S
+  reactor_type: PWR
+  investment: { type: "Degenerate", value: 8532000 }
+  plant_capacity: { type: "Degenerate", value: 40 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 40 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 146645 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 6.23829 }
+  reference_pj:
+    investment: { type: "Degenerate", value: 8600000 }
+    capacity: { type: "Degenerate", value: 1117 }
+
+- name: KLT-40S
+  reactor_type: PWR
+  investment: { type: "Degenerate", value: 13531429 }
+  plant_capacity: { type: "Degenerate", value: 35 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 40 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 170980 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 6.23829 }
+  reference_pj:
+    investment: { type: "Degenerate", value: 8600000 }
+    capacity: { type: "Degenerate", value: 1117 }
+
+- name: CAREM
+  reactor_type: PWR
+  investment: { type: "Degenerate", value: 23187500 }
+  plant_capacity: { type: "Degenerate", value: 30 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 40 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 146645 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 6.23829 }
+  reference_pj:
+    investment: { type: "Degenerate", value: 8600000 }
+    capacity: { type: "Degenerate", value: 1117 }
+
+- name: EM2
+  reactor_type: HTR/GFR
+  investment: { type: "Degenerate", value: 4373300 }
+  plant_capacity: { type: "Degenerate", value: 265 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 60 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+      fixed: { type: "Degenerate", value: 104340 }
+      variable: { type: "Degenerate", value: 2.3326 }
+      fuel: { type: "Degenerate", value: 19.29224 }
+  reference_pj:
+      investment: { type: "Degenerate", value: 7195125 }
+      capacity: { type: "Degenerate", value: 330 }
+    
+- name: HTR-PM
+  reactor_type: HTR
+  investment: { type: "Degenerate", value: 3270000 }
+  plant_capacity: { type: "Degenerate", value: 210 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+      construction: { type: "Degenerate", value: 3 }
+      operating: { type: "Degenerate", value: 40 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+      fixed: { type: "Degenerate", value: 168920 }
+      variable: { type: "Degenerate", value: 2.3326 }
+      fuel: { type: "Degenerate", value: 13.96582 }
+  reference_pj:
+      investment: { type: "Degenerate", value: 7195125 }
+      capacity: { type: "Degenerate", value: 330 }
+  
+- name: PBMR-400
+  reactor_type: HTGR
+  investment: { type: "Degenerate", value: 1734300 }
+  plant_capacity: { type: "Degenerate", value: 165 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+      construction: { type: "Degenerate", value: 3 }
+      operating: { type: "Degenerate", value: 40 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+      fixed: { type: "Degenerate", value: 136630 }
+      variable: { type: "Degenerate", value: 2.3326 }
+      fuel: { type: "Degenerate", value: 8.6394 }
+  reference_pj:
+      investment: { type: "Degenerate", value: 7195125 }
+      capacity: { type: "Degenerate", value: 330 }
+  
+- name: ARC-100
+  reactor_type: SFR
+  investment: { type: "Degenerate", value: 5050000 }
+  plant_capacity: { type: "Degenerate", value: 100 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+      construction: { type: "Degenerate", value: 3 }
+      operating: { type: "Degenerate", value: 60 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+      fixed: { type: "Degenerate", value: 130750 }
+      variable: { type: "Degenerate", value: 2.3326 }
+      fuel: { type: "Degenerate", value: 78.04363 }
+  reference_pj:
+      investment: { type: "Degenerate", value: 27747200 }
+      capacity: { type: "Degenerate", value: 1250 }
+  
+- name: CEFR
+  reactor_type: SFR
+  investment: { type: "Degenerate", value: 19350000 }
+  plant_capacity: { type: "Degenerate", value: 20 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+      construction: { type: "Degenerate", value: 3 }
+      operating: { type: "Degenerate", value: 30 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+      fixed: { type: "Degenerate", value: 130750 }
+      variable: { type: "Degenerate", value: 2.3326 }
+      fuel: { type: "Degenerate", value: 113.05615 }
+  reference_pj:
+      investment: { type: "Degenerate", value: 27747200 }
+      capacity: { type: "Degenerate", value: 1250 }
+    
+- name: 4S
+  reactor_type: SFR
+  investment: { type: "Degenerate", value: 6900000 }
+  plant_capacity: { type: "Degenerate", value: 10 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+      construction: { type: "Degenerate", value: 3 }
+      operating: { type: "Degenerate", value: 30 }
+  loadfactor: { type: "Uniform", lower: 0.75, upper: 0.85 }
+  operating_cost:
+      fixed: { type: "Degenerate", value: 130750 }
+      variable: { type: "Degenerate", value: 2.3326 }
+      fuel: { type: "Degenerate", value: 23.8625 }
+  reference_pj:
+      investment: { type: "Degenerate", value: 27747200 }
+      capacity: { type: "Degenerate", value: 1250 }
