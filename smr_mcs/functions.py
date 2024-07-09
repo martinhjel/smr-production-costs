@@ -1,30 +1,34 @@
+import sys
+
 import numpy as np
 
 from smr_mcs.config import ScalingOption, SimulationConfig
-from smr_mcs.project import SimulationProject
+from smr_mcs.distributions import Uniform
+from smr_mcs.project import SimulationProject, load_simulation_projects_from_yaml
 
 
-def get_rand_investment(pj: SimulationProject, config: SimulationConfig):
+def get_rand_investment(pj: SimulationProject, config: SimulationConfig, plant_capacity: np.ndarray):
+    learning_rate = (1 - pj.learning_factor.draw(config.n)) ** float(config.unit_doubling)
+    reference_capacity = pj.reference_pj.capacity.draw(config.n)
     if config.opt_scaling == ScalingOption.MANUFACTURER:
-        rand_investment = (
-            pj.investment.draw(config.n)
-            * pj.plant_capacity.draw(config.n)
-            * np.ones(config.n)
-            * (1 - pj.learning_factor.draw(config.n))
-        )
-    elif config.opt_scaling == ScalingOption.ROULSTONE or config.opt_scaling == ScalingOption.UNIFORM:
+        rand_investment = pj.investment.draw(config.n) * plant_capacity * learning_rate
+    elif config.opt_scaling == ScalingOption.ROULSTONE:
+        beta = config.scaling.draw(config.n)
         rand_investment = (
             pj.reference_pj.investment.draw(config.n)
-            * pj.reference_pj.capacity.draw(config.n)
-            * (1 - pj.learning_factor.draw(config.n))
-            * (pj.plant_capacity.draw(config.n) / pj.reference_pj.capacity.draw(config.n)) ** config.scaling.draw(config.n)
+            * reference_capacity
+            * learning_rate
+            * (plant_capacity / reference_capacity) ** beta
         )
     elif config.opt_scaling == ScalingOption.ROTHWELL:
+        beta = config.scaling.draw(config.n)
+        # gamma = np.power(2, beta - 1) # NB:
+        gamma = beta
         rand_investment = (
             pj.reference_pj.investment.draw(config.n)
-            * pj.reference_pj.capacity.draw(config.n)
-            * (1 - pj.learning_factor.draw(config.n))
-            * (pj.plant_capacity.draw(config.n) / pj.reference_pj.capacity.draw(config.n)) ** (1 + np.log2(config.scaling.draw(config.n)))
+            * reference_capacity
+            * learning_rate
+            * (plant_capacity / reference_capacity) ** (1 + np.log2(gamma))
         )
     else:
         raise ValueError("Option for the scaling method is unknown.")
@@ -44,21 +48,19 @@ def mc_run(config: SimulationConfig, pj: SimulationProject) -> dict:
     total_time = construction_time + operating_time
     max_time = int(max(total_time))
     max_operational_time = int(max(operating_time))
-    
+
     plant_capacity = pj.plant_capacity.draw(config.n)
-    
+
     wacc = config.wacc.draw(config.n)
     electricity_price = config.electricity_price.draw((config.n, max_operational_time))
     loadfactor = pj.loadfactor.draw((config.n, max_operational_time))
-    loadfactor_mask = np.arange(max_operational_time) < operating_time[:, None]
-    loadfactor[~loadfactor_mask] = 0.0 
-    
-    investment = get_rand_investment(pj, config=config)
+
+    investment = get_rand_investment(pj, config=config, plant_capacity=plant_capacity)
 
     operating_cost_fix = plant_capacity * pj.operating_cost.fixed.draw(config.n)
     operating_cost_variable = pj.operating_cost.variable.draw(config.n) + pj.operating_cost.fuel.draw(config.n)
 
-    cash_in = np.zeros((config.n, max_time)) 
+    cash_in = np.zeros((config.n, max_time))
     cash_out = np.zeros((config.n, max_time))
     cash_net = np.zeros((config.n, max_time))
     disc_cash_out = np.zeros((config.n, max_time))
@@ -73,15 +75,18 @@ def mc_run(config: SimulationConfig, pj: SimulationProject) -> dict:
 
     # Construction stage
     cash_out[construction_mask] = (investment / construction_time).repeat(construction_time)
-    
+
     # Operational stage
-    electricity[operation_mask] = (plant_capacity[:,np.newaxis] * loadfactor * 8760).flatten()
-    cash_in[operation_mask] = electricity_price.flatten()*electricity[operation_mask]
-    cash_out[operation_mask] = operating_cost_fix.repeat(operating_time) + operating_cost_variable.repeat(operating_time) * electricity[operation_mask]
-    
-    discount = 1/((1+wacc[:, np.newaxis])**(np.arange(max_time)))
-    disc_electricity = electricity*discount
-    cash_net = cash_in - cash_out    
+    electricity[operation_mask] = (plant_capacity[:, np.newaxis] * loadfactor * 8760).flatten()
+    cash_in[operation_mask] = electricity_price.flatten() * electricity[operation_mask]
+    cash_out[operation_mask] = (
+        operating_cost_fix.repeat(operating_time)
+        + operating_cost_variable.repeat(operating_time) * electricity[operation_mask]
+    )
+
+    discount = 1 / ((1 + wacc[:, np.newaxis]) ** (np.arange(max_time)))
+    disc_electricity = electricity * discount
+    cash_net = cash_in - cash_out
     disc_cash_out = cash_out * discount
     disc_cash_net = cash_net * discount
 
@@ -94,8 +99,29 @@ def mc_run(config: SimulationConfig, pj: SimulationProject) -> dict:
         "loadfactor": loadfactor,
         "investment": investment,
         "npv": np.sum(disc_cash_net, axis=1) / plant_capacity,
-        "lcoe": np.sum(disc_cash_out, axis=1) / np.sum(disc_electricity, axis=1)
+        "lcoe": np.sum(disc_cash_out, axis=1) / np.sum(disc_electricity, axis=1),
     }
+
+
+def get_total_size(obj, seen=None):
+    """Recursively find the total memory size of an object."""
+    size = sys.getsizeof(obj)
+    if seen is None:
+        seen = set()
+    obj_id = id(obj)
+    if obj_id in seen:
+        return 0
+    seen.add(obj_id)
+
+    if isinstance(obj, dict):
+        size += sum(get_total_size(v, seen) for v in obj.values())
+        size += sum(get_total_size(k, seen) for k in obj.keys())
+    elif hasattr(obj, "__dict__"):
+        size += get_total_size(vars(obj), seen)
+    elif hasattr(obj, "__iter__") and not isinstance(obj, (str, bytes, bytearray)):
+        size += sum(get_total_size(i, seen) for i in obj)
+
+    return size
 
 
 if __name__ == "__main__":
@@ -103,8 +129,6 @@ if __name__ == "__main__":
     from pathlib import Path
 
     import pandas as pd
-    import plotly.graph_objects as go
-    from plotly.subplots import make_subplots
 
     from smr_mcs.distributions import Gaussian, Triangular, Uniform
     from smr_mcs.project import load_simulation_projects_from_yaml
@@ -121,37 +145,14 @@ if __name__ == "__main__":
         wacc=Triangular(left=0.04, mode=0.06, right=0.12),
         scaling=Uniform(lower=0.20, upper=0.75),
         opt_scaling=ScalingOption.ROTHWELL,
+        unit_doubling=1,
     )
-    
+
     for pj in simulation_projects:
         res = mc_run(config=config, pj=pj)
 
         df_npv[pj.name] = res["npv"] / pj.plant_capacity.draw(1)
         df_lcoe[pj.name] = res["lcoe"]
 
-    
     df_npv.describe()
     df_lcoe.describe()
-
-    # %%
-    
-    res = npv_lcoe(disc_res)
-
-
-    def plot_rand_vars(rand_vars):
-        # Determine the number of subplots based on the number of keys in rand_vars
-        num_vars = len(rand_vars)
-        rows = int(num_vars**0.5)  # Arrange plots in a roughly square layout
-        cols = -(-num_vars // rows)  # Ceiling division to determine the number of columns
-
-        # Create a subplot figure
-        fig = make_subplots(rows=rows, cols=cols, subplot_titles=[f"{key}" for key in rand_vars])
-
-        # Add a histogram to each subplot
-        for i, key in enumerate(rand_vars, start=1):
-            trace = go.Histogram(x=rand_vars[key].flatten(), nbinsx=100)
-            fig.add_trace(trace, row=(i - 1) // cols + 1, col=(i - 1) % cols + 1)
-
-        # Update layout if necessary (e.g., to adjust spacing or add a common title)
-        fig.update_layout(title_text=f"Histograms for {pj.name}", showlegend=False)
-        fig.show()
