@@ -137,18 +137,18 @@ def create_distribution(data):
     elif distribution_type == "Uniform":
         lower = data["lower"]
         upper = data["upper"]
-        seed = data.get("seed", 1)  # Default seed
+        seed = data.get("seed", None)
         return Uniform(lower=lower, upper=upper, seed=seed)
     elif distribution_type == "Gaussian":
         mean = data["mean"]
         std = data["std"]
-        seed = data.get("seed", None)  # Default seed None for Gaussian
+        seed = data.get("seed", None)
         return Gaussian(mean=mean, std=std, seed=seed)
     elif distribution_type == "Triangular":
         left = data["left"]
         mode = data["mode"]
         right = data["right"]
-        seed = data.get("seed", 1)  # Default seed
+        seed = data.get("seed", None)
         return Triangular(left=left, mode=mode, right=right, seed=seed)
     else:
         raise ValueError(f"Unknown distribution type: {distribution_type}")
