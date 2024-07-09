@@ -1,0 +1,15 @@
+n: 1000000
+electricity_price:
+  type: "Uniform"
+  lower: 52.2
+  upper: 95.8
+wacc:
+  type: "Uniform"
+  lower: 0.04
+  upper: 0.10
+scaling:
+  type: "Uniform"
+  lower: 0.20
+  upper: 0.75
+opt_scaling: "roulstone"
+unit_doubling: 1
