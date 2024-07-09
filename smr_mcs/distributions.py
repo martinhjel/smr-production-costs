@@ -15,9 +15,11 @@ class Distribution(metaclass=ABCMeta):
         pass
 
     @staticmethod
-    def from_dict(data: dict[str, Any]) -> "Distribution":
+    def from_dict(data: dict[str, Any]) -> Self:
         pass
 
+    def __eq__(self, other: Any) -> bool:
+        pass
 
 class Uniform(Distribution):
     def __init__(self, lower: float, upper: float, seed=None) -> None:
@@ -37,7 +39,14 @@ class Uniform(Distribution):
         return Uniform(lower=data["lower"], upper=data["upper"], seed=data["seed"])
 
     def __repr__(self):
-        return self.__class__.__name__ + f"(lower={self.lower}, upper={self.upper})"
+        return self.__class__.__name__ + f"(lower={self.lower}, upper={self.upper}, seed={self.seed})"
+
+    def __eq__(self, other):
+        if isinstance(other, Uniform):
+            print(f"Comparing: {self} == {other}")
+            return self.seed == other.seed and self.lower == other.lower and self.upper == other.upper
+
+        return False
 
 
 class Gaussian(Distribution):
@@ -59,6 +68,12 @@ class Gaussian(Distribution):
 
     def __repr__(self):
         return self.__class__.__name__ + f"(mean={self.mean}, std={self.std})"
+
+    def __eq__(self, other):
+        if isinstance(other, Gaussian):
+            return self.seed == other.seed and self.mean == other.mean and self.std == other.std
+
+        return False
 
 
 class Triangular(Distribution):
@@ -88,6 +103,16 @@ class Triangular(Distribution):
     def __repr__(self):
         return self.__class__.__name__ + f"(left={self.left}, mode={self.mode}, right={self.right})"
 
+    def __eq__(self, other):
+        if isinstance(other, Triangular):
+            return (
+                self.seed == other.seed
+                and self.left == other.left
+                and self.mode == other.mode
+                and self.right == other.right
+            )
+        return False
+
 
 class Degenerate(Distribution):
     def __init__(self, value: int | float) -> None:
@@ -105,3 +130,9 @@ class Degenerate(Distribution):
 
     def __repr__(self):
         return self.__class__.__name__ + f"(vale={self.value})"
+
+    def __eq__(self, other):
+        if isinstance(other, Degenerate):
+            return self.value == other.value
+
+        return False
