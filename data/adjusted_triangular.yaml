@@ -1,0 +1,35 @@
+- name: BWRX-300
+  reactor_type: BWR
+  investment: { type: "Degenerate", value: 2250000 }
+  plant_capacity: { type: "Degenerate", value: 300 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 60 }
+  loadfactor: { type: "Uniform", lower: 0.73, upper: 0.91 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 144365 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 29.55448 }
+  reference_pj:
+    investment:
+      { type: "Triangular", left: 4341079, mode: 4754515, right: 6408260 }
+    capacity: { type: "Degenerate", value: 935 }
+
+- name: UK SMR
+  reactor_type: PWR
+  investment: { type: "Degenerate", value: 3900677 }
+  plant_capacity: { type: "Degenerate", value: 443 }
+  learning_factor: { type: "Degenerate", value: 0.1 }
+  time:
+    construction: { type: "Degenerate", value: 3 }
+    operating: { type: "Degenerate", value: 60 }
+  loadfactor: { type: "Uniform", lower: 0.73, upper: 0.91 }
+  operating_cost:
+    fixed: { type: "Degenerate", value: 518242 }
+    variable: { type: "Degenerate", value: 2.3326 }
+    fuel: { type: "Degenerate", value: 6.23829 }
+  reference_pj:
+    investment:
+      { type: "Triangular", left: 5186081, mode: 5679993, right: 7655643 }
+    capacity: { type: "Degenerate", value: 1117 }
